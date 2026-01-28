@@ -5,9 +5,9 @@ import type { Task } from '@/interfaces/Task'
 export const useTaskStore = defineStore('task', () => {
   const taskData = ref<Task[]>(
     [
-        {id:1,title:"run",completion:false,date:"2005-12-25"},
-        {id:2,title:"walk",completion:true,date:"2005-12-25"},
-        {id:3,title:"wake",completion:true,date:"2005-12-25"},
+        {"id":1,"title":"run","completion":false,"date":"2005-12-25"},
+        {"id":2,"title":"walk","completion":true,"date":"2005-12-25"},
+        {"id":3,"title":"wake","completion":true,"date":"2005-12-25"},
     ]
   );
 
