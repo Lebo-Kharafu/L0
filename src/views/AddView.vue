@@ -1,16 +1,13 @@
 <script setup lang="ts">
-import TaskList from '@/components/TaskList.vue';
-import { ref } from 'vue';
-let arr = ref([
-        {id:1,title:"run",completion:false},
-        {id:2,title:"walk",completion:true},
-        {id:3,title:"wake",completion:true},
-    ])
+    import TaskList from '@/components/TaskList.vue';
+    import { ref } from 'vue';
+    import { useTaskStore } from '@/stores/tasks';
+    const store = useTaskStore();
+    let arr = store.taskData;
 
     let taskTitle = ref("");
     const add = () => {
-        // TODO: ADD TO ACTUAL DATA STORE
-        arr.value.push({id:arr.value.length,title:taskTitle.value,completion:false})
+        store.addTask({ id: arr.length+1, title: taskTitle.value, completion: false, date: new Date().toISOString() })
     }
 </script>
 
@@ -26,22 +23,22 @@ let arr = ref([
 </template>
 
 <style scoped>
-#add-form {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    font-size: 2rem;
-    font-weight: 300;
-    justify-content: center;
-    gap: 2rem;
-}
+    #add-form {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        font-size: 2rem;
+        font-weight: 300;
+        justify-content: center;
+        gap: 2rem;
+    }
 
-input {
-    width: 50%;
-    height: 25px;
-}
+    input {
+        width: 50%;
+        height: 25px;
+    }
 
-button{
-     height: 30px;
-}
+    button {
+        height: 30px;
+    }
 </style>

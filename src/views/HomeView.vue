@@ -1,17 +1,13 @@
 <script setup lang="ts">
-import TaskList from '@/components/TaskList.vue';
+    import TaskList from '@/components/TaskList.vue';
+    import { useTaskStore } from '@/stores/tasks';
+    const store = useTaskStore();
 
-let arr = [
-        {id:1,title:"run",completion:false},
-        {id:2,title:"walk",completion:true},
-        {id:3,title:"wake",completion:true},
-    ]
+    let arr = store.taskData;
 </script>
 
 <template>
-    <TaskList :arr = "arr"/>
+    <TaskList :arr="arr" />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

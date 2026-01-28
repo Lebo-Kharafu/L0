@@ -1,15 +1,18 @@
 <script setup lang="ts">
     import type { Task } from '@/interfaces/Task';
     import { useRoute, useRouter } from 'vue-router';
+    import { useTaskStore } from '@/stores/tasks';
+    const store = useTaskStore();
 
     const router = useRouter()
-    const route = useRoute()
 
     let props = defineProps<{ item: Task }>()
     let editTask = (id: number) => {
         router.push(`edit/${id}`)
     }
     let deleteTask = (id: number) => {
+        store.deleteTask(id);
+        router.go(0);
         console.log(`Del-> ${id}`)
     }
 

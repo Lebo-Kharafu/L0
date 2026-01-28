@@ -3,9 +3,6 @@ import ListItem from './ListItem.vue';
     let props = defineProps({
         arr:Object,
     })
-
-
-
 </script>
 
 <template>
