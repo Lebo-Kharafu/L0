@@ -1,0 +1,34 @@
+{
+  "sceneName": "GET_ALL_DELAYED",
+  "data": {
+    "success": true,
+    "data": [
+      {
+        "id": 1,
+        "title": "run",
+        "completion": false,
+        "date": "2005-12-25"
+      },
+      {
+        "id": 2,
+        "title": "walk",
+        "completion": true,
+        "date": "2005-12-25"
+      },
+      {
+        "id": 3,
+        "title": "wake",
+        "completion": true,
+        "date": "2005-12-25"
+      }
+    ]
+  },
+  "interfaceUniqId": "c489fb10-ed1c-4444-b813-3b9ad4ea0de3",
+  "contextConfig": {
+    "responseDelay": "10",
+    "responseStatus": 200,
+    "responseHeaders": {}
+  },
+  "uniqId": "154b961a-eda0-43b4-882c-b487bc4f6fe5",
+  "format": "json"
+}

@@ -1,0 +1,16 @@
+{
+  "sceneName": "GET_ALL_ERROR",
+  "data": {
+    "success": false,
+    "data": [],
+    "msg": "Error Server might offline"
+  },
+  "interfaceUniqId": "c489fb10-ed1c-4444-b813-3b9ad4ea0de3",
+  "contextConfig": {
+    "responseDelay": "5",
+    "responseStatus": "500",
+    "responseHeaders": {}
+  },
+  "uniqId": "1a52a0d3-4f70-4564-b56b-c26365a3bf3d",
+  "format": "json"
+}
