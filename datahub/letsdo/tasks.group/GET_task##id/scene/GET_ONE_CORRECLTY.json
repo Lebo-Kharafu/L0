@@ -1,0 +1,20 @@
+{
+  "sceneName": "GET_ONE_CORRECLTY",
+  "data": {
+    "success": true,
+    "data": {
+      "id": 1,
+      "title": "run",
+      "completion": false,
+      "date": "2005-12-25"
+    }
+  },
+  "interfaceUniqId": "c4254f56-373c-4dde-8842-e6e4082d21f1",
+  "contextConfig": {
+    "responseDelay": 0,
+    "responseStatus": 200,
+    "responseHeaders": {}
+  },
+  "uniqId": "0bcf3085-23f9-4363-9431-8c4383af9fb7",
+  "format": "json"
+}

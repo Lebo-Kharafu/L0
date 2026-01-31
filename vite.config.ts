@@ -7,7 +7,7 @@ import DataHub from 'macaca-datahub'
 import path from 'node:path'
 
 const datahubConfig = {
-  port: 5678, hostname: '127.0.0.1',
+  port: 9200, hostname: '127.0.0.1',
   store: './datahub',
   proxy: { '/api': { hub: 'letsdo', }, },
   showBoard: true,
@@ -22,7 +22,7 @@ export default defineConfig({
     vueDevTools(),
     {
       name: 'vite-plugin-datahub', configureServer() {
-        defaultDatahub.startServer(datahubConfig).then(() => { console.log('datahub ready') })
+        defaultDatahub.startServer(datahubConfig).then(() => { console.log('Datahub ready') })
       },
     },
   ],
@@ -32,11 +32,19 @@ export default defineConfig({
     },
   },
   server: {
+    cors: true,
     proxy: {
       '/api': {
-        target: `http://${datahubConfig.hostname}:${datahubConfig.port}`,
+        target: `http://${datahubConfig.hostname}:${datahubConfig.port}/data/letsdo/`,
         changeOrigin: true,
+        rewrite: (path:string) => path.replace(/^\/api/, ''),
+        /*configure: (proxy, _options) => {
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('Proxying:', req.method, req.url, '→', `http://${datahubConfig.hostname}:${datahubConfig.port}${proxyReq.path}`);
+          });
+        },*/
       },
+      
     },
   },
 })

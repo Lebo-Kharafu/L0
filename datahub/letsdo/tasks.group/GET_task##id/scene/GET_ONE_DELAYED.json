@@ -1,0 +1,20 @@
+{
+  "sceneName": "GET_ONE_DELAYED",
+  "data": {
+    "success": true,
+    "data": {
+      "id": 1,
+      "title": "run",
+      "completion": false,
+      "date": "2005-12-25"
+    }
+  },
+  "interfaceUniqId": "c4254f56-373c-4dde-8842-e6e4082d21f1",
+  "contextConfig": {
+    "responseDelay": "5",
+    "responseStatus": 200,
+    "responseHeaders": {}
+  },
+  "uniqId": "9dd4472c-bd25-451d-ab33-2876d738320c",
+  "format": "json"
+}
