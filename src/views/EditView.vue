@@ -2,7 +2,7 @@
     import { useRouter, useRoute } from 'vue-router'
     import { ref } from 'vue';
 
-    import { useTaskStore } from '@/stores/tasks';
+    import { useTaskStore } from '@/stores/tasks/tasks';
     const store = useTaskStore();
 
 

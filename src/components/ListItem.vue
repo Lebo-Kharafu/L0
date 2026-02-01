@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import type { Task } from '@/interfaces/Task';
     import { useRoute, useRouter } from 'vue-router';
-    import { useTaskStore } from '@/stores/tasks';
+    import { useTaskStore } from '@/stores/tasks/tasks';
     const store = useTaskStore();
 
     const router = useRouter()
