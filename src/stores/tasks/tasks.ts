@@ -1,38 +1,63 @@
 import type { Task } from '@/interfaces/Task'
-import { fetchAllTask, fetchTask } from "./tasksEffect";
-import { update } from "./tasksUpdate";
-import { ref, readonly } from 'vue'
-import { defineStore } from 'pinia'
+import { defineStore } from "pinia";
+import { ref, readonly } from "vue";
+
 import {
   initialModel,
-  type taskModelArray,
-  type initialArray,
+  type TaskModel,
   type TaskMsg,
-} from "./tasksModel";
+
+
+  type taskModelSingle,
+  type taskModelArray,
+  initialSingle,
+  initialArray,
+} from './tasksModel';
+
+import {
+  fetchAllTask,
+  fetchTask,
+  postTask,
+  deleteTask,
+  updateTask
+} from './tasksEffect';
+import { update } from './tasksUpdate';
 
 export const useTaskStore = defineStore('task', () => {
-  const taskData = ref<Task[]>([]);
+  // const listModel = ref<taskModelArray>(initialArray);
+  // const singleModel = ref<taskModelSingle>(initialSingle);
+  const model = ref<TaskModel>(initialModel);
 
-  function addTask(newTask: Task) {
-    taskData.value.push(newTask)
+  const dispatch = (msg: TaskMsg) => {
+      model.value = update(model.value,msg);
   }
 
-  function getTask(id: number) {
-    return taskData.value.find(x => x.id === id);
+  const getAll = async () => {
+    await fetchAllTask(dispatch);
   }
 
-  function updateTask(id: number, newdata: Partial<Task>) {
-
-    let old = taskData.value.find(x => x.id === id);
-    if (old) {
-      Object.assign(old, newdata);
-    }
-    console.log(old);
+  const getTask = async (id:number) => {
+    await fetchTask(id,dispatch);
   }
 
-  function deleteTask(id: number) {
-    taskData.value = taskData.value.filter(x => x.id !== id);
+  const addTask = async (newTask:Partial<Task>) => {
+    await postTask(newTask,dispatch);
   }
 
-  return { taskData, addTask, deleteTask, updateTask, getTask }
+  const editTask = async (id:number,newInfo:Partial<Task>) => {
+    await updateTask(id,newInfo,dispatch);
+  }
+
+  const removeTask = async (id:number) => {
+    await deleteTask(id,dispatch);
+  }
+
+  return {
+    getAll,
+    getTask,
+    addTask,
+    editTask,
+    removeTask,
+    state: readonly(model)
+  }
 })

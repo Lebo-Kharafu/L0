@@ -12,6 +12,19 @@ export type TaskModel = {
 export const initialModel: TaskModel = {
   isLoading: false,
   task: null,
+  tasks: null,
+  error: null,
+};
+
+export type taskModelSingle = {
+  isLoading: boolean;
+  task: Task | null;
+  error: string | null;
+};
+
+export const initialSingle: taskModelSingle = {
+  isLoading: false,
+  task: null,
   error: null,
 };
 
