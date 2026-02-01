@@ -2,12 +2,12 @@
     import TaskList from '@/components/TaskList.vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
     const store = useTaskStore();
+    store.getAll();
 
-    let arr = store.taskData;
 </script>
 
 <template>
-    <TaskList :arr="arr" />
+    <TaskList v-if="store.state.tasks" :arr="store.state.tasks" />
 </template>
 
 <style scoped></style>

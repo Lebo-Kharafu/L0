@@ -7,7 +7,8 @@ export async function fetchAllTask(
   dispatch({ type: "FETCH_ALL_REQUEST" });
 
   try {
-    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/tasks`);
+    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/tasks`);
+    const res = await fetch(`api/tasks`);
     if (!res.ok) throw new Error("Not found");
     const data = await res.json();
 
@@ -24,7 +25,8 @@ export async function fetchTask(
   dispatch({ type: "FETCH_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/${id}`);
+    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/${id}`);
+    const res = await fetch(`api/task/${id}`);
     if (!res.ok) throw new Error("Not found");
     const data = await res.json();
 
@@ -41,7 +43,8 @@ export async function postTask(
   dispatch({ type: "ADD_ONE_REQUEST", task });
 
   try {
-    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/add`, {
+    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/add`, {
+    const res = await fetch(`api/task/add`, {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +71,8 @@ export async function updateTask(
   dispatch({ type: "UPDATE_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/edit/${id}`, {
+    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/edit/${id}`, {
+    const res = await fetch(`api/edit/${id}`, {
       method: "PUT", 
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +98,8 @@ export async function deleteTask(
   dispatch({ type: "DELETE_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/del/${id}`, {
+    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/del/${id}`, {
+    const res = await fetch(`api/task/del/${id}`, {
       method: "DELETE", 
     });
 

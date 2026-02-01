@@ -7,7 +7,7 @@ import DataHub from 'macaca-datahub'
 import path from 'node:path'
 
 const datahubConfig = {
-  port: 9200, hostname: '127.0.0.1',
+  port: 9200, hostname: '0.0.0.0',
   store: './datahub',
   proxy: { '/api': { hub: 'letsdo', }, },
   showBoard: true,
@@ -38,11 +38,11 @@ export default defineConfig({
         target: `http://${datahubConfig.hostname}:${datahubConfig.port}/data/letsdo/`,
         changeOrigin: true,
         rewrite: (path:string) => path.replace(/^\/api/, ''),
-        /*configure: (proxy, _options) => {
+        configure: (proxy, _options) => {
           proxy.on('proxyReq', (proxyReq, req, _res) => {
             console.log('Proxying:', req.method, req.url, '→', `http://${datahubConfig.hostname}:${datahubConfig.port}${proxyReq.path}`);
           });
-        },*/
+        },
       },
       
     },
