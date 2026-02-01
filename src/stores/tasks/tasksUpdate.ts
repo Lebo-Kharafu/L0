@@ -8,6 +8,12 @@ export function update(model: TaskModel, msg: TaskMsg): TaskModel {
     case "FETCH_ONE_SUCCESS":
       return { ...model, isLoading: false, task: msg.task };
     
+    case "ADD_ONE_REQUEST":
+      return { ...model, isLoading: true, error: null };
+
+    case "ADD_ONE_SUCCESS":
+      return { ...model, isLoading: false, task: msg.task };
+    
     case "UPDATE_ONE_REQUEST":
       return { ...model, isLoading: true, error: null };
 

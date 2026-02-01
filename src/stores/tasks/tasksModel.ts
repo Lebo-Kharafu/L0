@@ -31,6 +31,8 @@ export const initialArray: taskModelArray = {
 export type TaskMsg =
   | { type: "FETCH_ONE_REQUEST"; id: number}
   | { type: "FETCH_ONE_SUCCESS"; task: Task }
+  | { type: "ADD_ONE_REQUEST"; task: Partial<Task>}
+  | { type: "ADD_ONE_SUCCESS"; task: Task }
   | { type: "UPDATE_ONE_REQUEST"; id: number}
   | { type: "UPDATE_ONE_SUCCESS"; task: Task }
   | { type: "DELETE_ONE_REQUEST"; id: number}

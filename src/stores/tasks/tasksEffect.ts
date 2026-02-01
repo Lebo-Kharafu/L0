@@ -1,4 +1,6 @@
 import type { TaskMsg } from "./tasksModel";
+import type { Task } from "@/interfaces/Task";
+
 
 export async function fetchTask(
   id: number,
@@ -11,7 +13,80 @@ export async function fetchTask(
     if (!res.ok) throw new Error("Not found");
     const data = await res.json();
 
-    dispatch({ type: "FETCH_ONE_SUCCESS", task: data.task });
+    dispatch({ type: "FETCH_ONE_SUCCESS", task: data.data });
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
+
+export async function updateTask(
+  id: number, 
+  changes: Partial<Task>,
+  dispatch: (m: TaskMsg) => void
+) {
+  dispatch({ type: "UPDATE_ONE_REQUEST", id });
+
+  try {
+    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/edit/${id}`, {
+      method: "PUT", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(changes), 
+    });
+
+    if (!res.ok) throw new Error("Update failed");
+    
+    const data = await res.json();
+
+    dispatch({ type: "UPDATE_ONE_SUCCESS", task: data.data });
+    
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
+
+export async function addTask(
+  task: Partial<Task>,
+  dispatch: (m: TaskMsg) => void
+) {
+  dispatch({ type: "ADD_ONE_REQUEST", task });
+
+  try {
+    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/add`, {
+      method: "POST", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(task), 
+    });
+
+    if (!res.ok) throw new Error("Post failed");
+    
+    const data = await res.json();
+
+    dispatch({ type: "ADD_ONE_SUCCESS", task: data.data });
+    
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
+
+export async function deleteTask(
+  id: number, 
+  dispatch: (m: TaskMsg) => void
+) {
+  dispatch({ type: "DELETE_ONE_REQUEST", id });
+
+  try {
+    const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/del/${id}`, {
+      method: "DELETE", 
+    });
+
+    if (!res.ok) throw new Error("Delete failed");
+    
+    dispatch({ type: "DELETE_ONE_SUCCESS", deleted: true });
+    
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }
@@ -27,7 +102,7 @@ export async function fetchAllTask(
     if (!res.ok) throw new Error("Not found");
     const data = await res.json();
 
-    dispatch({ type: "FETCH_ALL_SUCCESS", tasks: data.tasks });
+    dispatch({ type: "FETCH_ALL_SUCCESS", tasks: data.data });
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }
