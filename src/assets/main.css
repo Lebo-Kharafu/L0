@@ -2,9 +2,10 @@
 
 #app {
   flex-grow: 1;
+  height: 100%;
   max-width: 100%;
   margin: 0;
-  padding: 1rem;
+  padding: 0% 1rem;
 }
 
 a {

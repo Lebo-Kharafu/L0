@@ -4,14 +4,14 @@
 
 <template>
     <div id="footer">
-        <h2>Footer</h2>
+        <h2>Since 2026</h2>
     </div>
 </template>
 
 <style scoped>
     h2 {
-        font-weight: 300;
-        font-size: 3rem;
+        font-weight: 250;
+        font-size: 1.5rem;
     }
 
     #footer {

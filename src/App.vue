@@ -19,6 +19,8 @@ import PageHeader from './components/page-header.vue';
 #conatiner {
   display: grid;
   grid-template-rows: auto 2fr auto;
+
+  min-height: 100dvh;
 }
 
 #main {

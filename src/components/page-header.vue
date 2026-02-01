@@ -12,8 +12,8 @@
 
 <style scoped>
     * {
-        font-weight: 300;
-        font-size: 6rem;
+        font-weight: 250;
+        font-size: 2.5rem;
     }
 
     #header {
