@@ -4,7 +4,8 @@
 
 <template>
     <div id="footer">
-        <h2>Since 2026</h2>
+        <!-- <h2>Since 2026</h2> -->
+        <h2><RouterLink to="/about">About</RouterLink></h2>
     </div>
 </template>
 
@@ -17,7 +18,7 @@
     #footer {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
         text-align: center;
     }
