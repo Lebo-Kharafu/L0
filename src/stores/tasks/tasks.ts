@@ -45,19 +45,19 @@ export const useTaskStore = defineStore('task', () => {
     if(!initialized.value){
       
       const localData = localStorage.getItem('taskList');
-      // const localHistory = localStorage.getItem('history');
+      const localHistory = localStorage.getItem('history');
       const localFlag = localStorage.getItem('task_initialized');
       
       if (localFlag && localData) {
         model.value.tasks = JSON.parse(localData);
-        // if(localHistory){
-        //   history.value = JSON.parse(localHistory);
-        // }
+        if(localHistory){
+           history.value = JSON.parse(localHistory);
+        }
         initialized.value = true;
       } else {
         await fetchAllTask(dispatch);
         localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-        // localStorage.setItem('history', JSON.stringify(history.value));
+        localStorage.setItem('history', JSON.stringify(history.value));
         localStorage.setItem('task_initialized', 'true');
         initialized.value = true;
       }
@@ -94,22 +94,6 @@ export const useTaskStore = defineStore('task', () => {
     return undefined;
   }
 
-  // const addTask = async (newTask:Omit<Task,"id">) => {
-  //   // ! ONLY WORKS ON REAL API NOT MOCK
-  //   // await postTask(newTask,dispatch);
-  //   const stateTask = model.value.tasks;
-    
-  //   if (stateTask) {
-  //     const lastIndx = stateTask.length - 1;
-  //     const id = stateTask[lastIndx]?.id ? stateTask[lastIndx]?.id + 1 : Math.floor(Math.random() * 1000);;
-  //     model.value.error = null;
-  //     model.value.tasks?.push({id:id,...newTask});
-  //     return {id:id,...newTask};
-  //   }
-
-  //   // TODO: ADD FROM PERSISTENT STATE AND TRACK
-  //   // history.value.push({inverse:"DEL",state:newTask);
-  // }
 
 const addTask = async (newTask: Omit<Task, "id">) => {
     // ! ONLY WORKS ON REAL API NOT MOCK
@@ -129,12 +113,12 @@ const addTask = async (newTask: Omit<Task, "id">) => {
       model.value.tasks?.push(finalTask);
 
       localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-      // localStorage.setItem('history', JSON.stringify(history.value));
-
+      
       history.value.push({ 
         inverse: "DEL", 
         state: { id: id } 
       });
+      localStorage.setItem('history', JSON.stringify(history.value));
 
       return finalTask;
     }
@@ -155,9 +139,9 @@ const editTask = async (id: number, newInfo: Partial<Task>) => {
       }
 
       localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-      // localStorage.setItem('history', JSON.stringify(history.value));
       
       history.value.push({ inverse: "EDIT", state: task });
+      localStorage.setItem('history', JSON.stringify(history.value));
     }
   }
 
@@ -166,23 +150,25 @@ const editTask = async (id: number, newInfo: Partial<Task>) => {
     // await deleteTask(id,dispatch);
 
     const task = model.value.tasks?.find((t) => t.id === id);
+    if (!task) {return};
+
     model.value.tasks = model.value.tasks?.filter((x) => x.id !== id);
 
     localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-    // localStorage.setItem('history', JSON.stringify(history.value));
-
+    
+    const { id: removedId, ...usableTask } = task;
+    // history.value.push({ inverse: "ADD", state: usableTask });
     history.value.push({ inverse: "ADD", state: {...task} });
+    localStorage.setItem('history', JSON.stringify(history.value));
   }
 
   const hardRefresh = async () => {
-    // TODO: REMOVE EVERYTHING FROM PERSISTENT STATE
     model.value = initialModel;
     history.value = [];
     localStorage.clear();
   }
 
   const undo = async () => {
-    // TODO: RETRIEVE STATE AND INVERT
     const latest = history.value.pop();
     if (!latest || !model.value.tasks) return;
     switch (latest?.inverse) {
