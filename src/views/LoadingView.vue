@@ -10,7 +10,6 @@
 
 <style scoped>
     #loading{
-        background-color: firebrick;
         color: aquamarine;
 
         display: flex;
