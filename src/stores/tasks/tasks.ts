@@ -24,8 +24,12 @@ import {
 import { update } from './tasksUpdate';
 
 export const useTaskStore = defineStore('task', () => {
-  // const listModel = ref<taskModelArray>(initialArray);
-  // const singleModel = ref<taskModelSingle>(initialSingle);
+  const initialized = ref<boolean>(false);
+  interface invertState {
+    inverse:string;
+    state: Partial<Task>;
+  }
+  const history = ref<invertState[]>([]);
   const model = ref<TaskModel>(initialModel);
 
   const dispatch = (msg: TaskMsg) => {
@@ -33,24 +37,65 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const getAll = async () => {
-    await fetchAllTask(dispatch);
+    if(!initialized){
+      await fetchAllTask(dispatch);
+    }else{
+      // TODO: GET FROM PERSISTENT STATE
+    }
   }
 
   const getTask = async (id:number) => {
-    await fetchTask(id,dispatch);
+    // ! ONLY WORKS ON REAL API NOT MOCK
+    // await fetchTask(id,dispatch);
+
+    // TODO: GET FROM PERSISTENT STATE
   }
 
   const addTask = async (newTask:Partial<Task>) => {
-    await postTask(newTask,dispatch);
+    // ! ONLY WORKS ON REAL API NOT MOCK
+    // await postTask(newTask,dispatch);
+
+    // TODO: ADD FROM PERSISTENT STATE AND TRACK
+    // history.value.push({inverse:"DEL",state:newTask);
   }
 
   const editTask = async (id:number,newInfo:Partial<Task>) => {
-    await updateTask(id,newInfo,dispatch);
+    // ! ONLY WORKS ON REAL API NOT MOCK
+    // await updateTask(id,newInfo,dispatch);
+
+    // TODO: EDIT FROM PERSISTENT STATE AND TRACK
+    // history.value.push({inverse:"EDIT",state:{id:id,...newInfo}})
   }
 
   const removeTask = async (id:number) => {
-    await deleteTask(id,dispatch);
+    // ! ONLY WORKS ON REAL API NOT MOCK
+    // await deleteTask(id,dispatch);
+
+    // TODO: REMOVE FROM PERSISTENT STATE AND TRACK
+    // history.value.push({inverse:"ADD",state:getTask(id));
   }
+
+  const undo = async () => {
+    // TODO: RETRIEVE STATE AND INVERT
+    const latest = history.value.pop();
+    switch (latest?.inverse) {
+      case "ADD":
+        // TODO: ADD THE STATE
+        break;
+
+      case "DEL":
+        // TODO: DEL THE STATE
+        break;
+
+      case "EDIT":
+        // TODO: EDIT THE STATE
+        break;
+    
+      default:
+        break;
+    }
+  }
+
 
   return {
     getAll,
