@@ -1,79 +1,162 @@
 <script setup lang="ts">
     import { useRouter, useRoute } from 'vue-router'
-    import { ref } from 'vue';
-
+    import { ref, onMounted } from 'vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
+
+    import type { Task } from '@/interfaces/Task';
+    import LoadingView from '@/components/LoadingView.vue';
+
     const store = useTaskStore();
+    const router = useRouter(); 
+    const route = useRoute();
 
+    const id = parseInt(route.params.id as string);
 
+    const isLoading = ref(true);
+    const originalTitle = ref("");
 
-    const router = useRouter()
-    const route = useRoute()
-    let id = parseInt(route.params.id as string);
-    let task = store.getTask(id);
-    console.log(route.params.id)
+    const newTitle = ref("");
+    const isCompleted = ref(false);
 
+    onMounted(async () => {
+        const foundTask = await store.getTask(id);
 
-    let oldtitle = ref(task?.title);
-    let newtitle = ref("");
-    let completion = ref(task?.completion);
+        if (foundTask) {
+            originalTitle.value = foundTask.title;
+            newTitle.value = foundTask.title;
+            isCompleted.value = foundTask.completion;
+            isLoading.value = false;
+        } else {
+            console.error("Task not found");
+            router.push("/");
+        }
+    });
 
-    let saveEdit = () => {
-        store.updateTask(id, { title: newtitle.value.length > 0 ? newtitle.value : oldtitle.value, completion: completion.value })
+    const saveEdit = async () => {
+        const finalTitle = newTitle.value.trim() === "" ? originalTitle.value : newTitle.value;
+
+        await store.editTask(id, {
+            title: finalTitle,
+            completion: isCompleted.value
+        });
+
         try {
-            router.back()
+            router.back();
         } catch (error) {
-            router.push("/")
+            router.push("/");
         }
     }
-
-
 </script>
 
 <template>
-    <div id="edit-form">
+    <LoadingView v-if="isLoading" />
+    <div v-else id="edit-form">
+
         <div id="edit-title">
-            <label for="title"> New-Title: </label>
-            <input id="title" type="text" name="title" v-model="newtitle">
-            <p>Old-title: {{ oldtitle }} -> {{ newtitle }}</p>
+            <label for="title">Title:</label>
+            <input id="title" type="text" v-model="newTitle" placeholder="Task Name">
         </div>
+
+        <p v-if="originalTitle !== newTitle" class="diff-text">
+            Changing: <span>{{ originalTitle }}</span> &rarr; <span>{{ newTitle }}</span>
+        </p>
+
         <div id="edit-completion">
-            <label for="completion"> Completed</label>
-            <input id="completion" type="checkbox" name="completion" v-model="completion">
+            <label for="completion">Completed:</label>
+            <input id="completion" type="checkbox" v-model="isCompleted">
         </div>
-        <button v-on:click="saveEdit">Done</button>
+
+        <button @click="saveEdit">Done</button>
     </div>
 </template>
 
 <style scoped>
-
     #edit-form {
         font-size: 2rem;
         display: flex;
         flex-direction: column;
         gap: 2rem;
-    }
+        padding: 2rem;
+        max-width: 100%;
+        margin: 0 auto;
 
-    #edit-title {
-        max-height: 25px;
-        display: flex;
-        flex-direction: row;
-
+        justify-content: center;
         align-items: center;
-        gap: 1rem;
     }
 
+    #edit-title,
     #edit-completion {
-        max-height: 25px;
         display: flex;
         flex-direction: row;
-
         align-items: center;
         gap: 1rem;
     }
 
-    p {
-        color: aquamarine;
+    input[type="text"] {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        flex-grow: 1;
     }
 
+    input[type="checkbox"] {
+        width: 25px;
+        height: 25px;
+    }
+
+    .diff-text {
+        font-size: 1.2rem;
+        color: #888;
+        margin-left: 2rem;
+    }
+
+    .diff-text span {
+        color: aquamarine;
+        font-weight: bold;
+    }
+
+    button {
+        font-size: 1.5rem;
+        padding: 0.5rem 2rem;
+        cursor: pointer;
+        align-self: center;
+    }
+
+    @media (max-width: 450px) {
+        #edit-form {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            align-items: center;
+        }
+
+        #edit-title {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        #edit-title input[type="text"] {
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        #edit-completion {
+            justify-content: space-between;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .diff-text {
+            display: flex;
+            flex-direction: column;
+            font-size: 1rem;
+            text-align: center;
+            margin: 0;
+        }
+    }
 </style>
