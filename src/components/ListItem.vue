@@ -11,7 +11,7 @@
         router.push(`edit/${id}`)
     }
     let deleteTask = (id: number) => {
-        store.deleteTask(id);
+        store.removeTask(id);
         router.go(0);
         console.log(`Del-> ${id}`)
     }
@@ -21,7 +21,8 @@
 
 <template>
     <div id="li">
-        <span>Title: {{ item.title }}</span>
+        <span> {{ item.title }} </span>
+        <!-- <span>Title: {{ item.title }}</span> -->
         <div id="btn-group">
             <button v-on:click="editTask(item.id)">Edit</button>
             <button v-on:click="deleteTask(item.id)">Delete</button>
@@ -55,10 +56,17 @@
         width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
         text-align: center;
 
         border: 2px solid var(--vt-c-indigo);
+        padding: 0.5rem;
+    }
+
+    @media (max-width: 450px) {
+        #li > * {
+            font-size: 1.2rem;
+        }
     }
 </style>

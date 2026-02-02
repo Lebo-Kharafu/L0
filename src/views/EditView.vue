@@ -89,13 +89,14 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        /* justify-content: space-around; */
         gap: 1rem;
     }
 
     input[type="text"] {
         font-size: 1.5rem;
         padding: 0.5rem;
-        flex-grow: 1;
+        flex-grow: 2;
     }
 
     input[type="checkbox"] {
