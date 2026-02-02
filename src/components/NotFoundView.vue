@@ -1,29 +1,35 @@
 <script setup lang="ts">
-
 </script>
 
 <template>
     <div id="not-found">
-        {{ "NOt-fOUND" }}
+        404 - Not Found
     </div>
 </template>
 
 <style scoped>
-    #not-found{
-        background-color: firebrick;
-        color: aquamarine;
+    #not-found {
+        color: var(--color-text);
+        background-color: var(--color-background-soft);
+        border: 1px dashed var(--color-border);
+        border-radius: 8px;
 
         display: flex;
-
-        min-height: 100px;
-        max-height: 250px;
+        min-height: 200px;
         width: 100%;
+        margin: 2rem auto;
 
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         text-align: center;
 
         font-weight: 600;
-        font-size: 6rem;
+        font-size: 4rem;
+    }
+
+    @media (max-width: 600px) {
+        #not-found {
+            font-size: 2.5rem;
+        }
     }
 </style>

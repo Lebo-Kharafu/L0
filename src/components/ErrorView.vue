@@ -1,29 +1,39 @@
 <script setup lang="ts">
-
+    import { useTaskStore } from '@/stores/tasks/tasks';
+    const store = useTaskStore();
 </script>
 
 <template>
     <div id="error">
-        {{ "error" }}
+        <span>{{ store.state.error || "Error Occurred" }}</span>
     </div>
 </template>
 
 <style scoped>
-    #error{
-        background-color: firebrick;
-        color: aquamarine;
+    #error {
+        color: #ef4444; 
+        background-color: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
 
         display: flex;
-
         min-height: 100px;
-        max-height: 250px;
         width: 100%;
+        max-width: 800px; 
+        margin: 1rem auto;
 
-        justify-content: space-around;
+        justify-content: center;
         align-items: center;
         text-align: center;
 
         font-weight: 600;
-        font-size: 6rem;
+        font-size: 3rem;
+    }
+
+    @media (max-width: 600px) {
+        #error {
+            font-size: 2rem;
+            min-height: 80px;
+        }
     }
 </style>
