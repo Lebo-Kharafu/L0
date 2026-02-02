@@ -2,8 +2,6 @@
     import { useRouter, useRoute } from 'vue-router'
     import { ref, onMounted } from 'vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
-
-    import type { Task } from '@/interfaces/Task';
     import LoadingView from '@/components/LoadingView.vue';
 
     const store = useTaskStore();
@@ -11,16 +9,13 @@
     const route = useRoute();
 
     const id = parseInt(route.params.id as string);
-
     const isLoading = ref(true);
     const originalTitle = ref("");
-
     const newTitle = ref("");
     const isCompleted = ref(false);
 
     onMounted(async () => {
         const foundTask = await store.getTask(id);
-
         if (foundTask) {
             originalTitle.value = foundTask.title;
             newTitle.value = foundTask.title;
@@ -34,17 +29,11 @@
 
     const saveEdit = async () => {
         const finalTitle = newTitle.value.trim() === "" ? originalTitle.value : newTitle.value;
-
         await store.editTask(id, {
             title: finalTitle,
             completion: isCompleted.value
         });
-
-        try {
-            router.back();
-        } catch (error) {
-            router.push("/");
-        }
+        try { router.back(); } catch (error) { router.push("/"); }
     }
 </script>
 
@@ -54,7 +43,12 @@
 
         <div id="edit-title">
             <label for="title">Title:</label>
-            <input id="title" type="text" v-model="newTitle" placeholder="Task Name">
+            <input 
+                id="title" 
+                type="text" 
+                v-model="newTitle" 
+                placeholder="Task Name"
+            >
         </div>
 
         <p v-if="originalTitle !== newTitle" class="diff-text">
@@ -63,10 +57,15 @@
 
         <div id="edit-completion">
             <label for="completion">Completed:</label>
-            <input id="completion" type="checkbox" v-model="isCompleted">
+            <input 
+                id="completion" 
+                type="checkbox" 
+                v-model="isCompleted"
+                class="status-checkbox"
+            >
         </div>
 
-        <button @click="saveEdit">Done</button>
+        <button class="save-btn" @click="saveEdit">Done</button>
     </div>
 </template>
 
@@ -79,9 +78,9 @@
         padding: 2rem;
         max-width: 100%;
         margin: 0 auto;
-
         justify-content: center;
         align-items: center;
+        color: var(--color-text);
     }
 
     #edit-title,
@@ -89,64 +88,80 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        /* justify-content: space-around; */
         gap: 1rem;
+        width: 100%;
+        max-width: 600px;
     }
 
     input[type="text"] {
         font-size: 1.5rem;
         padding: 0.5rem;
         flex-grow: 2;
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        color: var(--color-text);
+        border-radius: 4px;
+    }
+    
+    input[type="text"]:focus {
+        outline: 2px solid var(--vt-c-indigo);
     }
 
-    input[type="checkbox"] {
+    .status-checkbox {
         width: 25px;
         height: 25px;
+        accent-color: hsla(160, 100%, 37%, 1);
+        cursor: pointer;
     }
 
     .diff-text {
         font-size: 1.2rem;
-        color: #888;
+        color: var(--color-text);
+        opacity: 0.7;
         margin-left: 2rem;
     }
 
     .diff-text span {
-        color: aquamarine;
+        color: hsla(160, 100%, 37%, 1); 
         font-weight: bold;
     }
 
-    button {
+    .save-btn {
         font-size: 1.5rem;
         padding: 0.5rem 2rem;
         cursor: pointer;
         align-self: center;
+        border: none;
+        color: white;
+        transition: opacity 0.2s;
+    }
+
+    .save-btn:hover {
+        opacity: 0.9;
     }
 
     @media (max-width: 450px) {
         #edit-form {
-            margin: 0;
-            padding: 0;
+            padding: 1rem;
             width: 100%;
-            align-items: center;
         }
 
         #edit-title {
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            align-items: stretch; 
             gap: 0.5rem;
         }
 
         #edit-title input[type="text"] {
             width: 100%;
-            font-size: 1rem;
+            font-size: 1.2rem;
         }
 
         #edit-completion {
             justify-content: space-between;
         }
 
-        button {
+        .save-btn {
             width: 100%;
             padding: 1rem;
             margin-top: 1rem;
