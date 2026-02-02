@@ -2,8 +2,8 @@
     import { computed, onMounted } from 'vue';
     import TaskList from '@/components/TaskList.vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
-    import ErrorView from './ErrorView.vue';
-    import LoadingView from './LoadingView.vue';
+    import ErrorView from '../components/ErrorView.vue';
+    import LoadingView from '../components/LoadingView.vue';
 
     const store = useTaskStore();
 
