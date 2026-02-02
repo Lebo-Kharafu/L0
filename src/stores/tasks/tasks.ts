@@ -203,6 +203,7 @@ const editTask = async (id: number, newInfo: Partial<Task>) => {
     editTask,
     removeTask,
     hardRefresh,
-    state: readonly(model)
+    state: readonly(model),
+    history: readonly(history)
   }
 })

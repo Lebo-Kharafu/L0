@@ -25,6 +25,7 @@
             <div v-if="showMenu" class="dropdown">
                 <nav>
                     <RouterLink to="/" @click="showMenu = false">Home</RouterLink>
+                    <RouterLink to="/history" @click="showMenu = false">History</RouterLink>
                     <RouterLink to="/about" @click="showMenu = false">About</RouterLink>
                 </nav>
             </div>

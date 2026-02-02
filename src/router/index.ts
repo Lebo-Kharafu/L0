@@ -14,9 +14,9 @@ const router = createRouter({
       redirect: '/',
     },
     {
-      path: '/add',
-      name: 'add',
-      component: () => import('../views/AddView.vue'),
+      path: '/history',
+      name: 'history',
+      component: () => import('../views/HistoryView.vue'),
     },
     {
       path: '/edit/:id',
