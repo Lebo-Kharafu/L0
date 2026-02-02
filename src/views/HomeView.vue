@@ -42,7 +42,11 @@
             @keyup.enter="add" 
         >
         
-        <button @click="add">ADD TASK</button>
+        <button class="btn-primary" @click="add">ADD TASK</button>
+
+        <button class="btn-secondary" @click="store.undo" title="Undo Last Action">
+            &#8630;
+        </button>
     </div>
 
     <div id="task-list">
@@ -83,6 +87,19 @@
         padding: 0.5rem 1.5rem;
         cursor: pointer;
         white-space: nowrap;
+        border: 1px solid #ccc;
+        transition: all 0.2s ease;
+    }
+
+    .btn-secondary {
+        padding: 0.5rem;
+        font-size: 1.5rem;   
+    }
+
+    .btn-primary:hover,
+    .btn-secondary:hover {
+        background-color: #eee;
+        color: #333;
     }
 
     #task-list {
@@ -122,5 +139,9 @@
             width: 100%;
             padding: 1rem;
         }
+
+        .btn-primary { flex-grow: 2; }
+        .btn-secondary { flex-grow: 1; }
+
     }
 </style>
