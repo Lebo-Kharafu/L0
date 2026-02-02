@@ -4,7 +4,7 @@
   "method": "GET",
   "projectUniqId": "ce14dc18-e695-44d4-9e14-21477b724da6",
   "description": "specific task",
-  "currentScene": "GET_ONE_ERROR",
+  "currentScene": "GET_ONE_CORRECLTY",
   "proxyConfig": {
     "enabled": false,
     "proxyList": [],

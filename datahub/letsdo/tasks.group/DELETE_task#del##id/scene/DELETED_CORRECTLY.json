@@ -1,0 +1,13 @@
+{
+  "sceneName": "DELETED_CORRECTLY",
+  "data": {
+    "success": true,
+    "data": null
+  },
+  "interfaceUniqId": "d990e35d-65c8-45fd-9b42-a29ce11da271",
+  "contextConfig": {
+    "responseHeaders": {}
+  },
+  "uniqId": "93561e2b-9f8b-4c8a-a00d-e21bd02988ea",
+  "format": "json"
+}

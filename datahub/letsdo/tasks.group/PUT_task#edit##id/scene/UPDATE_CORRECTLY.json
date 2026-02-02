@@ -1,5 +1,5 @@
 {
-  "sceneName": "GET_ONE_CORRECLTY",
+  "sceneName": "UPDATE_CORRECTLY",
   "data": {
     "success": true,
     "data": {
@@ -9,12 +9,10 @@
       "completion": false
     }
   },
-  "interfaceUniqId": "c4254f56-373c-4dde-8842-e6e4082d21f1",
+  "interfaceUniqId": "962425a0-20b3-4724-a347-ad54fdb64313",
   "contextConfig": {
-    "responseDelay": 0,
-    "responseStatus": 200,
     "responseHeaders": {}
   },
-  "uniqId": "0bcf3085-23f9-4363-9431-8c4383af9fb7",
+  "uniqId": "59f7e7a7-adce-47df-ac3e-0b28719df052",
   "format": "json"
 }
