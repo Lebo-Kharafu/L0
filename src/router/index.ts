@@ -10,14 +10,13 @@ const router = createRouter({
       component: () => import('../views/testView.vue'),
     },
     {
-      path: '/home',
+      path: '/',
       name: 'home',
       component: HomeView,
     },
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: '/home',
+      redirect: '/',
     },
     {
       path: '/add',
@@ -37,7 +36,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
-      component: () => import('../views/NotFoundView.vue'),
+      component: () => import('../components/NotFoundView.vue'),
     }
   ],
 })
