@@ -339,6 +339,24 @@ export async function redoLastAction(
   }
 }
 
+export async function hardRefreshAction(
+  dispatch: (m: TaskMsg) => void
+) {
+  try {
+    localStorage.clear();
+    
+    // Alternative: If you only want to clear this app's data:
+    // localStorage.removeItem('taskList');
+    // localStorage.removeItem('history');
+    // localStorage.removeItem('redo');
+    // localStorage.removeItem('task_initialized');
 
+    // 2. Dispatch Success
+    dispatch({ type: "RESET_SUCCESS" });
+    
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
 
 

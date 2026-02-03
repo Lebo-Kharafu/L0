@@ -31,4 +31,5 @@ export type TaskMsg =
   | { type: "DELETE_ONE_SUCCESS"; id: number; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "FETCH_ALL_REQUEST";}
   | { type: "FETCH_ALL_SUCCESS"; tasks: Task[]; history?: InvertState[]; redo?: InvertState[]; }
+  | { type: "RESET_SUCCESS" }
   | { type: "REQUEST_FAILURE"; error: string };

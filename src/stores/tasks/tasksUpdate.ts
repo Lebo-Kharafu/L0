@@ -1,4 +1,4 @@
-import type { TaskModel, TaskMsg } from "./tasksModel";
+import { initialModel, type TaskModel, type TaskMsg } from "./tasksModel";
 
 export function update(model: TaskModel, msg: TaskMsg): TaskModel {
   switch (msg.type) {
@@ -44,6 +44,9 @@ export function update(model: TaskModel, msg: TaskMsg): TaskModel {
 
     case "FETCH_ALL_SUCCESS":
       return { ...model, isLoading: false, tasks: msg.tasks  };
+
+    case "RESET_SUCCESS":
+      return initialModel;
 
     case "REQUEST_FAILURE":
       return { ...model, isLoading: false, error: msg.error };

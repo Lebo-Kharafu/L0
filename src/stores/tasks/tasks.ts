@@ -18,6 +18,7 @@ import {
   updateTask,
   redoLastAction,
   undoLastAction,
+  hardRefreshAction
 } from './tasksEffect';
 import { update } from './tasksUpdate';
 
@@ -50,6 +51,12 @@ export const useTaskStore = defineStore('task', () => {
       initialized.value = true;
     }
 
+    if (msg.type === "RESET_SUCCESS") {
+      historyStack.value = [];
+      redoStack.value = [];
+      initialized.value = false;
+    }
+
   }
 
   const getAll = async () => {
@@ -74,10 +81,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const hardRefresh = async () => {
-    model.value = initialModel;
-    initialized.value = false;
-    historyStack.value = [];
-    localStorage.clear();
+    await hardRefreshAction(dispatch);
   }
 
   const undo = async () => {
