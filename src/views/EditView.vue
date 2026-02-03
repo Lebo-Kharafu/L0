@@ -2,7 +2,7 @@
     import { useRouter, useRoute } from 'vue-router'
     import { ref, onMounted } from 'vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
-    import LoadingView from '@/components/LoadingView.vue';
+    import LoadingView from '@/components/LoadingCard.vue';
 
     const store = useTaskStore();
     const router = useRouter(); 

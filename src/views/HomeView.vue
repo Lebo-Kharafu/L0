@@ -2,8 +2,8 @@
     import { computed, onMounted, ref } from 'vue';
     import TaskList from '@/components/TaskList.vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
-    import ErrorView from '@/components/ErrorView.vue';
-    import LoadingView from '@/components/LoadingView.vue';
+    import ErrorView from '@/components/ErrorCard.vue';
+    import LoadingView from '@/components/LoadingCard.vue';
 
     const store = useTaskStore();
     const taskTitle = ref("");
