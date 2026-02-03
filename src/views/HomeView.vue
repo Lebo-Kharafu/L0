@@ -16,6 +16,9 @@
     const isLoading = computed(() => store.state.isLoading);
     const error = computed(() => store.state.error);
 
+    const noHistory = computed(() => store.historyStack.length === 0);
+    const noFuture = computed(() => store.redoStack.length === 0);    
+
     const add = async () => {
         if (taskTitle.value.trim().length === 0) return;
         await store.addTask({ 
@@ -38,14 +41,20 @@
             @keyup.enter="add" 
         >
         
-        <button class="btn-primary" @click="add">ADD TASK</button>
+        <button class="btn-primary" @click="add">
+            ADD TASK
+        </button>
 
-        <button id="btn-undo" class="btn-secondary" @click="store.undo" title="Undo Last Action">
+        <button id="btn-undo" class="btn-secondary" @click="store.undo" title="Undo Last Action"
+            :disabled="noHistory"
+        >
             &#8630;
         </button>
-        <!-- <button id="btn-redo" class="btn-secondary" @click="store.undo" title="Redo Last Action">
+        <button id="btn-redo" class="btn-secondary" @click="store.redo" title="Redo Last Action"
+            :disabled="noFuture"
+        >
             &#8631;
-        </button> -->
+        </button>
     </div>
 
     <div id="task-list">
@@ -158,7 +167,7 @@
         .btn-primary {
             order: 2;
             flex-grow: 3;
-            /* min-width: 100%; */
+            min-width: 100%;
         }
 
         #btn-undo {
