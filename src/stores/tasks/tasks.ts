@@ -55,26 +55,7 @@ export const useTaskStore = defineStore('task', () => {
 
 
   const getTask = async (id: number) => {
-
-    // await fetchTask(id,dispatch); // ! ONLY WORKS ON REAL API NOT MOCK
-    const stateTask = model.value.tasks?.find((t: any) => t.id === id);
-
-    if (stateTask) {
-      model.value.error = null;
-      return stateTask;
-    }
-
-    const localData = localStorage.getItem('taskList');
-
-    if (localData) {
-      const tasks = JSON.parse(localData);
-      const localTask = tasks.find((t: any) => t.id === id);
-      model.value.error = null;
-      return localTask;
-    }
-
-    model.value.error = "Task does not exist";
-    return undefined;
+    await fetchTask(id, dispatch);
   }
 
 

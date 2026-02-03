@@ -57,11 +57,28 @@ export async function fetchTask(
   dispatch({ type: "FETCH_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`api/task/${id}`);
-    if (!res.ok) throw new Error("Not found");
-    const data = await res.json();
+    /* 
+     const res = await fetch(`api/task/${id}`); // ! only works if we have a api
+     if (!res.ok) throw new Error("Not found");
+     const data = await res.json(); 
+     dispatch({ type: "FETCH_ONE_SUCCESS", task: data.data });
+    */
 
-    dispatch({ type: "FETCH_ONE_SUCCESS", task: data.data });
+     const localData = localStorage.getItem('taskList');
+
+     if (!localData) {
+        throw new Error("Task list is empty");
+    }
+
+    const tasks = JSON.parse(localData);
+    const foundTask = tasks.find((t: any) => t.id === id);
+
+    if (!foundTask) {
+        throw new Error("Task not found");
+    }
+
+    dispatch({ type: "FETCH_ONE_SUCCESS", task: foundTask });
+
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }

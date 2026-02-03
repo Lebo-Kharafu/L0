@@ -15,7 +15,8 @@
     const isCompleted = ref(false);
 
     onMounted(async () => {
-        const foundTask = await store.getTask(id);
+        store.getTask(id);
+        const foundTask = store.state.task;
         if (foundTask) {
             originalTitle.value = foundTask.title;
             newTitle.value = foundTask.title;
@@ -33,7 +34,13 @@
             title: finalTitle,
             completion: isCompleted.value
         });
-        try { router.back(); } catch (error) { router.push("/"); }
+        try { 
+            router.back(); 
+        } 
+        catch (error) { 
+            console.error(error);
+            router.push("/"); 
+        }
     }
 </script>
 
