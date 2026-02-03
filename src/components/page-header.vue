@@ -21,6 +21,24 @@
 </script>
 <template>
     <div id="header">
+        <div class="menu-wrapper">
+            <span 
+                class="icon-btn menu-btn" 
+                @click="showMenu = !showMenu"
+                title="Menu"
+            > 
+                &equiv; 
+            </span>
+
+            <div v-if="showMenu" class="dropdown">
+                <nav>
+                    <RouterLink to="/" @click="showMenu = false">Home</RouterLink>
+                    <RouterLink to="/history" @click="showMenu = false">History</RouterLink>
+                    <RouterLink to="/about" @click="showMenu = false">About</RouterLink>
+                </nav>
+            </div>
+        </div>
+        
         <h1>Let's Do</h1>
 
         <div class="actions">

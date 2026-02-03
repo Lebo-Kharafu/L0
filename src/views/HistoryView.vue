@@ -4,7 +4,7 @@
     
     const store = useTaskStore();
     
-    const historyLog = computed(() => [...store.history].reverse());
+    const historyLog = computed(() => [...store.historyStack].reverse());
 
     const getActionLabel = (inverseType: string) => {
         switch (inverseType) {
