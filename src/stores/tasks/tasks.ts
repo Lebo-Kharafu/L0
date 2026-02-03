@@ -41,19 +41,16 @@ export const useTaskStore = defineStore('task', () => {
   const dispatch = (msg: TaskMsg) => {
     model.value = update(model.value, msg);
 
-    if (msg.type === "FETCH_ALL_SUCCESS" || msg.type === "UPDATE_ONE_SUCCESS") {
-      
-      if ('history' in msg && msg.history) {
-        historyStack.value = msg.history;
+    if ('history' in msg && msg.history) {
+      historyStack.value = msg.history;
     }
 
-      if ('redo' in msg && msg.redo) {
-        redoStack.value = msg.redo;
+    if ('redo' in msg && msg.redo) {
+      redoStack.value = msg.redo;
     }
 
-      if (msg.type === "FETCH_ALL_SUCCESS") {
+    if (msg.type === "FETCH_ALL_SUCCESS") {
       initialized.value = true;
-    }
     }
 
   }
@@ -67,42 +64,12 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const addTask = async (newTask: Omit<Task, "id">) => {
-
-    // await postTask(newTask,dispatch); // ! ONLY WORKS ON REAL API NOT MOCK
-
-    const stateTask = model.value.tasks;
-
-    if (stateTask) {
-      const lastIndx = stateTask.length - 1;
-      const id = stateTask.length > 0 && stateTask[lastIndx]?.id
-        ? stateTask[lastIndx].id + 1
-        : Math.floor(Math.random() * 1000);
-
-      const finalTask = { id: id, ...newTask };
-
-      model.value.error = null;
-      model.value.tasks?.push(finalTask);
-
-      // TODO: ADD ERROR HANDLING
-      localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-
-      historyStack.value.push({
-        inverse: "DEL",
-        state: { id: id }
-      });
-      // TODO: ADD ERROR HANDLING
-      localStorage.setItem('history', JSON.stringify(historyStack.value));
-
-      redoStack.value = [];
-      localStorage.setItem('redo', JSON.stringify(redoStack.value));
-
-      return finalTask;
-    }
+    await postTask(newTask, dispatch);
   }
 
   const editTask = async (id: number, newInfo: Partial<Task>) => {
 
-  await updateTask(id, newInfo, dispatch);
+    await updateTask(id, newInfo, dispatch);
   }
 
   const removeTask = async (id: number) => {
@@ -147,7 +114,7 @@ export const useTaskStore = defineStore('task', () => {
         // TODO: ADD ERROR HANDLING
         const taskToSave = model.value.tasks.find(t => t.id === latest.state.id);
         if (taskToSave) {
-             redoStack.value.push({ inverse: "ADD", state: { ...taskToSave } });
+          redoStack.value.push({ inverse: "ADD", state: { ...taskToSave } });
         }
         model.value.tasks = model.value.tasks.filter(t => t.id !== latest.state.id);
         break;
@@ -180,15 +147,15 @@ export const useTaskStore = defineStore('task', () => {
       case "ADD":
         // TODO: ADD ERROR HANDLING
         model.value.tasks.push(future.state as Task);
-        historyStack.value.push({ inverse: "DEL", state: { id: future.state.id }});
+        historyStack.value.push({ inverse: "DEL", state: { id: future.state.id } });
         break;
 
       case "DEL":
         // TODO: ADD ERROR HANDLING
         const taskToDel = model.value.tasks.find(t => t.id === future.state.id);
         if (taskToDel) {
-            historyStack.value.push({ inverse: "ADD", state: { ...taskToDel } });
-            model.value.tasks = model.value.tasks.filter(t => t.id !== future.state.id);
+          historyStack.value.push({ inverse: "ADD", state: { ...taskToDel } });
+          model.value.tasks = model.value.tasks.filter(t => t.id !== future.state.id);
         }
         break;
 

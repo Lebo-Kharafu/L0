@@ -85,23 +85,52 @@ export async function fetchTask(
 }
 
 export async function postTask(
-  task: Partial<Task>,
+  task: Omit<Task,"id">,
   dispatch: (m: TaskMsg) => void
 ) {
   dispatch({ type: "ADD_ONE_REQUEST", task });
 
   try {
-    const res = await fetch(`api/task/add`, {
+    /*const res = await fetch(`api/task/add`, {
       method: "POST", 
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(task), 
     });
-
     if (!res.ok) throw new Error("Post failed");
     const data = await res.json();
-    dispatch({ type: "ADD_ONE_SUCCESS", task: data.data });
+    dispatch({ type: "ADD_ONE_SUCCESS", task: data.data });*/
+    
+    const tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
+    const history = JSON.parse(localStorage.getItem('history') || '[]');
+
+    const lastIndx = tasks.length - 1;
+    const newId = tasks.length > 0 && tasks[lastIndx]?.id
+      ? tasks[lastIndx].id + 1
+      : Math.floor(Math.random() * 1000);
+
+    const finalTask = { id: newId, ...task };
+
+    tasks.push(finalTask);
+
+    history.push({ 
+        inverse: "DEL", 
+        state: { id: newId } 
+    });
+
+    const redo: InvertState[] = [];
+
+    localStorage.setItem('taskList', JSON.stringify(tasks));
+    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem('redo', JSON.stringify(redo));
+
+    dispatch({ 
+        type: "ADD_ONE_SUCCESS", 
+        task: finalTask,
+        history,
+        redo
+    });
     
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
