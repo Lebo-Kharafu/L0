@@ -285,6 +285,60 @@ export async function undoLastAction(
   }
 }
 
+export async function redoLastAction(
+  dispatch: (m: TaskMsg) => void
+) {
+  try {
+
+    let tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
+    const history = JSON.parse(localStorage.getItem('history') || '[]');
+    const redo = JSON.parse(localStorage.getItem('redo') || '[]');
+
+    const future = redo.pop();
+
+    if (!future) return;
+
+    switch (future.inverse) {
+      case "ADD":
+        tasks.push(future.state);
+        history.push({ inverse: "DEL", state: { id: future.state.id } });
+        break;
+
+      case "DEL":
+        const taskToDel = tasks.find((t: any) => t.id === future.state.id);
+        if (taskToDel) {
+          history.push({ inverse: "ADD", state: { ...taskToDel } });
+          tasks = tasks.filter((t: any) => t.id !== future.state.id);
+        }
+        break;
+
+      case "EDIT":
+        const index = tasks.findIndex((t: any) => t.id === future.state.id);
+        if (index !== -1) {
+          const oldState = { ...tasks[index] };
+          tasks[index] = future.state;
+
+          history.push({ inverse: "EDIT", state: oldState });
+        }
+        break;
+    }
+
+    localStorage.setItem('taskList', JSON.stringify(tasks));
+    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem('redo', JSON.stringify(redo));
+
+    dispatch({
+      type: "FETCH_ALL_SUCCESS",
+      tasks: tasks,
+      history,
+      redo
+    });
+
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
+
 
 
 

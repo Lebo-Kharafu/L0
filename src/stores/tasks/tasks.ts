@@ -16,7 +16,8 @@ import {
   postTask,
   deleteTask,
   updateTask,
-  undoLastAction
+  redoLastAction,
+  undoLastAction,
 } from './tasksEffect';
 import { update } from './tasksUpdate';
 
@@ -84,44 +85,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const redo = async () => {
-    const future = redoStack.value.pop();
-    if (!future || !model.value.tasks) return;
-
-    switch (future?.inverse) {
-      case "ADD":
-        // TODO: ADD ERROR HANDLING
-        model.value.tasks.push(future.state as Task);
-        historyStack.value.push({ inverse: "DEL", state: { id: future.state.id } });
-        break;
-
-      case "DEL":
-        // TODO: ADD ERROR HANDLING
-        const taskToDel = model.value.tasks.find(t => t.id === future.state.id);
-        if (taskToDel) {
-          historyStack.value.push({ inverse: "ADD", state: { ...taskToDel } });
-          model.value.tasks = model.value.tasks.filter(t => t.id !== future.state.id);
-        }
-        break;
-
-      case "EDIT":
-        // TODO: ADD ERROR HANDLING
-        const index = model.value.tasks.findIndex(t => t.id === future.state.id);
-        if (index !== -1) {
-          const oldState = { ...model.value.tasks[index] };
-          historyStack.value.push({ inverse: "EDIT", state: oldState });
-
-          model.value.tasks[index] = future.state as Task;
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    // TODO: ADD ERROR HANDLING
-    localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-    localStorage.setItem('history', JSON.stringify(historyStack.value));
-    localStorage.setItem('redo', JSON.stringify(redoStack.value));
+    await redoLastAction(dispatch);
   }
 
 
