@@ -7,12 +7,44 @@ export async function fetchAllTask(
   dispatch({ type: "FETCH_ALL_REQUEST" });
 
   try {
-    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/tasks`);
-    const res = await fetch(`api/tasks`);
-    if (!res.ok) throw new Error("Not found");
-    const data = await res.json();
 
-    dispatch({ type: "FETCH_ALL_SUCCESS", tasks: data.data });
+    const localFlag = localStorage.getItem('task_initialized');
+    const localData = localStorage.getItem('taskList');
+    const localHistory = localStorage.getItem('history');
+    const localRedo = localStorage.getItem('redo');
+
+    if (localFlag && localData) {
+       // --- OFFLINE MODE ---
+       console.log("Loading from LocalStorage");
+       
+       dispatch({ 
+         type: "FETCH_ALL_SUCCESS", 
+         tasks: JSON.parse(localData),
+         // Pass the stacks along with the tasks
+         history: localHistory ? JSON.parse(localHistory) : [],
+         redo: localRedo ? JSON.parse(localRedo) : []
+       });
+
+    } else {
+      console.log("Fetching from API");
+
+      const res = await fetch(`api/tasks`);
+      if (!res.ok) throw new Error("No Tasks found");
+      const data = await res.json();
+
+      localStorage.setItem('taskList', JSON.stringify(data.data));
+      localStorage.setItem('history', '[]');
+      localStorage.setItem('redo', '[]');
+      localStorage.setItem('task_initialized', 'true');
+
+      dispatch({ 
+        type: "FETCH_ALL_SUCCESS", 
+        tasks: data.data,
+        history: [],
+        redo: []
+      });
+    }
+
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }
@@ -25,7 +57,6 @@ export async function fetchTask(
   dispatch({ type: "FETCH_ONE_REQUEST", id });
 
   try {
-    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/${id}`);
     const res = await fetch(`api/task/${id}`);
     if (!res.ok) throw new Error("Not found");
     const data = await res.json();
@@ -43,7 +74,6 @@ export async function postTask(
   dispatch({ type: "ADD_ONE_REQUEST", task });
 
   try {
-    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/add`, {
     const res = await fetch(`api/task/add`, {
       method: "POST", 
       headers: {
@@ -71,7 +101,6 @@ export async function updateTask(
   dispatch({ type: "UPDATE_ONE_REQUEST", id });
 
   try {
-    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/edit/${id}`, {
     const res = await fetch(`api/edit/${id}`, {
       method: "PUT", 
       headers: {
@@ -98,7 +127,6 @@ export async function deleteTask(
   dispatch({ type: "DELETE_ONE_REQUEST", id });
 
   try {
-    // const res = await fetch(`https://127.0.0.1:9200/data/letsdo/task/del/${id}`, {
     const res = await fetch(`api/task/del/${id}`, {
       method: "DELETE", 
     });

@@ -1,4 +1,8 @@
 import type { Task } from "@/interfaces/Task";
+export interface InvertState {
+  inverse: string;
+  state: any;
+}
 
 // ? SHOULD I USE THIS OR THE MULTI UNION
 export type TaskModel = {
@@ -51,5 +55,5 @@ export type TaskMsg =
   | { type: "DELETE_ONE_REQUEST"; id: number}
   | { type: "DELETE_ONE_SUCCESS"; deleted: boolean }
   | { type: "FETCH_ALL_REQUEST";}
-  | { type: "FETCH_ALL_SUCCESS"; tasks: Task[] }
+  | { type: "FETCH_ALL_SUCCESS"; tasks: Task[]; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "REQUEST_FAILURE"; error: string };

@@ -40,36 +40,17 @@ export const useTaskStore = defineStore('task', () => {
 
   const dispatch = (msg: TaskMsg) => {
     model.value = update(model.value, msg);
+
+    if (msg.type === "FETCH_ALL_SUCCESS") {
+      if (msg.history) historyStack.value = msg.history;
+      if (msg.redo) redoStack.value = msg.redo;
+      initialized.value = true;
+    }
+
   }
 
   const getAll = async () => {
-    if (!initialized.value) {
-
-      const localData = localStorage.getItem('taskList');
-      const localHistory = localStorage.getItem('history');
-      const localFlag = localStorage.getItem('task_initialized');
-
-      if (localFlag && localData) {
-        model.value.tasks = JSON.parse(localData);
-        if (localHistory) {
-          historyStack.value = JSON.parse(localHistory);
-        }
-        initialized.value = true;
-      } else {
-        await fetchAllTask(dispatch);
-        // TODO: ADD ERROR HANDLING
-        localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-        localStorage.setItem('history', JSON.stringify(historyStack.value));
-        localStorage.setItem('task_initialized', 'true');
-        initialized.value = true;
-      }
-
-    } else {
-      const localData = localStorage.getItem('taskList');
-      if (localData) {
-        model.value.tasks = JSON.parse(localData);
-      }
-    }
+    await fetchAllTask(dispatch);
   }
 
 
