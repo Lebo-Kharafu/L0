@@ -8,11 +8,6 @@ import {
   type TaskModel,
   type TaskMsg,
 
-
-  type taskModelSingle,
-  type taskModelArray,
-  initialSingle,
-  initialArray,
 } from './tasksModel';
 
 import {
@@ -20,7 +15,8 @@ import {
   fetchTask,
   postTask,
   deleteTask,
-  updateTask
+  updateTask,
+  undoLastAction
 } from './tasksEffect';
 import { update } from './tasksUpdate';
 
@@ -84,42 +80,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const undo = async () => {
-    const latest = historyStack.value.pop();
-    if (!latest || !model.value.tasks) return;
-    switch (latest?.inverse) {
-      case "ADD":
-        // TODO: ADD ERROR HANDLING
-        model.value.tasks.push(latest.state as Task);
-        redoStack.value.push({ inverse: "DEL", state: { id: latest.state.id } });
-        break;
-
-      case "DEL":
-        // TODO: ADD ERROR HANDLING
-        const taskToSave = model.value.tasks.find(t => t.id === latest.state.id);
-        if (taskToSave) {
-          redoStack.value.push({ inverse: "ADD", state: { ...taskToSave } });
-        }
-        model.value.tasks = model.value.tasks.filter(t => t.id !== latest.state.id);
-        break;
-
-      case "EDIT":
-        // TODO: ADD ERROR HANDLING
-        const index = model.value.tasks.findIndex(t => t.id === latest.state.id);
-        if (index !== -1) {
-          const currentState = { ...model.value.tasks[index] };
-          redoStack.value.push({ inverse: "EDIT", state: currentState });
-          model.value.tasks[index] = latest.state as Task;
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    // TODO: ADD ERROR HANDLING
-    localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-    localStorage.setItem('history', JSON.stringify(historyStack.value));
-    localStorage.setItem('redo', JSON.stringify(redoStack.value));
+    await undoLastAction(dispatch);
   }
 
   const redo = async () => {

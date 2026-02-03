@@ -14,19 +14,17 @@ export async function fetchAllTask(
     const localRedo = localStorage.getItem('redo');
 
     if (localFlag && localData) {
-       // --- OFFLINE MODE ---
-       console.log("Loading from LocalStorage");
-       
-       dispatch({ 
-         type: "FETCH_ALL_SUCCESS", 
-         tasks: JSON.parse(localData),
-         // Pass the stacks along with the tasks
-         history: localHistory ? JSON.parse(localHistory) : [],
-         redo: localRedo ? JSON.parse(localRedo) : []
-       });
+      //  console.log("Loading from LocalStorage");
+
+      dispatch({
+        type: "FETCH_ALL_SUCCESS",
+        tasks: JSON.parse(localData),
+        history: localHistory ? JSON.parse(localHistory) : [],
+        redo: localRedo ? JSON.parse(localRedo) : []
+      });
 
     } else {
-      console.log("Fetching from API");
+      // console.log("Fetching from API");
 
       const res = await fetch(`api/tasks`);
       if (!res.ok) throw new Error("No Tasks found");
@@ -37,8 +35,8 @@ export async function fetchAllTask(
       localStorage.setItem('redo', '[]');
       localStorage.setItem('task_initialized', 'true');
 
-      dispatch({ 
-        type: "FETCH_ALL_SUCCESS", 
+      dispatch({
+        type: "FETCH_ALL_SUCCESS",
         tasks: data.data,
         history: [],
         redo: []
@@ -64,17 +62,17 @@ export async function fetchTask(
      dispatch({ type: "FETCH_ONE_SUCCESS", task: data.data });
     */
 
-     const localData = localStorage.getItem('taskList');
+    const localData = localStorage.getItem('taskList');
 
-     if (!localData) {
-        throw new Error("Task list is empty");
+    if (!localData) {
+      throw new Error("Task list is empty");
     }
 
     const tasks = JSON.parse(localData);
     const foundTask = tasks.find((t: any) => t.id === id);
 
     if (!foundTask) {
-        throw new Error("Task not found");
+      throw new Error("Task not found");
     }
 
     dispatch({ type: "FETCH_ONE_SUCCESS", task: foundTask });
@@ -85,7 +83,7 @@ export async function fetchTask(
 }
 
 export async function postTask(
-  task: Omit<Task,"id">,
+  task: Omit<Task, "id">,
   dispatch: (m: TaskMsg) => void
 ) {
   dispatch({ type: "ADD_ONE_REQUEST", task });
@@ -114,9 +112,9 @@ export async function postTask(
 
     tasks.push(finalTask);
 
-    history.push({ 
-        inverse: "DEL", 
-        state: { id: newId } 
+    history.push({
+      inverse: "DEL",
+      state: { id: newId }
     });
 
     const redo: InvertState[] = [];
@@ -125,20 +123,20 @@ export async function postTask(
     localStorage.setItem('history', JSON.stringify(history));
     localStorage.setItem('redo', JSON.stringify(redo));
 
-    dispatch({ 
-        type: "ADD_ONE_SUCCESS", 
-        task: finalTask,
-        history,
-        redo
+    dispatch({
+      type: "ADD_ONE_SUCCESS",
+      task: finalTask,
+      history,
+      redo
     });
-    
+
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }
 }
 
 export async function updateTask(
-  id: number, 
+  id: number,
   changes: Partial<Task>,
   dispatch: (m: TaskMsg) => void
 ) {
@@ -166,7 +164,7 @@ export async function updateTask(
 
     const updatedTask = { ...oldTask, ...changes };
     tasks[index] = updatedTask;
-    
+
     history.push({ inverse: "EDIT", state: oldTask });
 
     const redo: InvertState[] = [];
@@ -175,20 +173,20 @@ export async function updateTask(
     localStorage.setItem('history', JSON.stringify(history));
     localStorage.setItem('redo', JSON.stringify(redo));
 
-    dispatch({ 
-      type: "UPDATE_ONE_SUCCESS", 
+    dispatch({
+      type: "UPDATE_ONE_SUCCESS",
       task: updatedTask,
-      history, 
-      redo 
+      history,
+      redo
     });
-    
+
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }
 }
 
 export async function deleteTask(
-  id: number, 
+  id: number,
   dispatch: (m: TaskMsg) => void
 ) {
   dispatch({ type: "DELETE_ONE_REQUEST", id });
@@ -206,14 +204,14 @@ export async function deleteTask(
     const taskToDelete = tasks.find((t: any) => t.id === id);
 
     if (!taskToDelete) {
-        throw new Error("Task not found");
+      throw new Error("Task not found");
     }
 
     tasks = tasks.filter((t: any) => t.id !== id);
 
-    history.push({ 
-        inverse: "ADD", 
-        state: taskToDelete 
+    history.push({
+      inverse: "ADD",
+      state: taskToDelete
     });
 
     const redo: any[] = [];
@@ -222,13 +220,66 @@ export async function deleteTask(
     localStorage.setItem('history', JSON.stringify(history));
     localStorage.setItem('redo', JSON.stringify(redo));
 
-    dispatch({ 
-        type: "DELETE_ONE_SUCCESS", 
-        id: id, 
-        history, 
-        redo 
+    dispatch({
+      type: "DELETE_ONE_SUCCESS",
+      id: id,
+      history,
+      redo
     });
-    
+
+  } catch (e: any) {
+    dispatch({ type: "REQUEST_FAILURE", error: e.message });
+  }
+}
+
+export async function undoLastAction(
+  dispatch: (m: TaskMsg) => void
+) {
+  try {
+
+    let tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
+    const history = JSON.parse(localStorage.getItem('history') || '[]');
+    const redo = JSON.parse(localStorage.getItem('redo') || '[]');
+
+    const latest = history.pop();
+
+    if (!latest) return;
+
+    switch (latest.inverse) {
+      case "ADD":
+        tasks.push(latest.state);
+        redo.push({ inverse: "DEL", state: { id: latest.state.id } });
+        break;
+
+      case "DEL":
+        const taskToSave = tasks.find((t: any) => t.id === latest.state.id);
+        if (taskToSave) {
+          redo.push({ inverse: "ADD", state: taskToSave });
+        }
+        tasks = tasks.filter((t: any) => t.id !== latest.state.id);
+        break;
+
+      case "EDIT":
+        const index = tasks.findIndex((t: any) => t.id === latest.state.id);
+        if (index !== -1) {
+          const stateBeforeUndo = { ...tasks[index] };
+          tasks[index] = latest.state;
+          redo.push({ inverse: "EDIT", state: stateBeforeUndo });
+        }
+        break;
+    }
+
+    localStorage.setItem('taskList', JSON.stringify(tasks));
+    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem('redo', JSON.stringify(redo));
+
+    dispatch({
+      type: "FETCH_ALL_SUCCESS",
+      tasks: tasks,
+      history,
+      redo
+    });
+
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });
   }

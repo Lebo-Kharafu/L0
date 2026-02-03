@@ -20,31 +20,6 @@ export const initialModel: TaskModel = {
   error: null,
 };
 
-export type taskModelSingle = {
-  isLoading: boolean;
-  task: Task | null;
-  error: string | null;
-};
-
-export const initialSingle: taskModelSingle = {
-  isLoading: false,
-  task: null,
-  error: null,
-};
-
-export type taskModelArray = {
-  isLoading: boolean;
-  tasks: Task[] | null;
-  error: string | null;
-};
-
-export const initialArray: taskModelArray = {
-  isLoading: false,
-  tasks: null,
-  error: null,
-};
-
-
 export type TaskMsg =
   | { type: "FETCH_ONE_REQUEST"; id: number}
   | { type: "FETCH_ONE_SUCCESS"; task: Task }
