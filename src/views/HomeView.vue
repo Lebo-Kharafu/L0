@@ -40,9 +40,12 @@
         
         <button class="btn-primary" @click="add">ADD TASK</button>
 
-        <button class="btn-secondary" @click="store.undo" title="Undo Last Action">
+        <button id="btn-undo" class="btn-secondary" @click="store.undo" title="Undo Last Action">
             &#8630;
         </button>
+        <!-- <button id="btn-redo" class="btn-secondary" @click="store.undo" title="Redo Last Action">
+            &#8631;
+        </button> -->
     </div>
 
     <div id="task-list">
@@ -75,7 +78,6 @@
         flex-grow: 1;   
         max-width: 600px;
         
-        /* THEME FIXES */
         background: var(--color-background);
         border: 1px solid var(--color-border);
         color: var(--color-text);
@@ -123,7 +125,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 1rem; /* Consistent spacing */
+        gap: 1rem;
     }
 
     #task-list > * {
@@ -156,10 +158,17 @@
         .btn-primary {
             order: 2;
             flex-grow: 3;
+            /* min-width: 100%; */
         }
 
-        .btn-secondary {
+        #btn-undo {
             order: 3;
+            flex-grow: 1; 
+            min-width: 60px; 
+        }
+
+        #btn-redo {
+            order: 4;
             flex-grow: 1; 
             min-width: 60px; 
         }

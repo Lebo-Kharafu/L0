@@ -9,7 +9,6 @@
 
 <style scoped>
     #loading {
-        /* Use theme colors */
         color: var(--color-text);
         
         display: flex;
@@ -23,7 +22,6 @@
         font-weight: 300;
         font-size: 3rem;
         
-        /* Optional: Add a subtle pulse animation */
         animation: pulse 1.5s infinite ease-in-out;
     }
 
