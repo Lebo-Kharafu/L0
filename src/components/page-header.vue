@@ -1,13 +1,16 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { useTaskStore } from '@/stores/tasks/tasks';
-    // We assume you have Vue Router set up. If not, change <RouterLink> to <a>
     import { RouterLink } from 'vue-router'; 
+import router from '@/router';
 
     const store = useTaskStore();
     
-    // State to toggle the dropdown
     const showMenu = ref(false);
+    const refresh = () => {
+        store.hardRefresh();
+        router.go(0);
+    }
 </script>
 
 <template>
@@ -36,10 +39,11 @@
         <div class="actions">
             <span 
                 class="icon-btn danger" 
-                @click="store.hardRefresh"
+                @click="refresh"
                 title="Clear All Data"
             > 
-                &#128465; 
+                <!-- &#128465;  -->
+                &#10227; 
             </span>
         </div>
     </div>

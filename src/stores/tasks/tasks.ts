@@ -164,6 +164,7 @@ const editTask = async (id: number, newInfo: Partial<Task>) => {
 
   const hardRefresh = async () => {
     model.value = initialModel;
+    initialized.value = false;
     history.value = [];
     localStorage.clear();
   }
