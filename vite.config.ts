@@ -2,7 +2,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
-// @ts-ignore
+// @ts-ignore //macaca-datahub has no types
 import DataHub from 'macaca-datahub'
 import path from 'node:path'
 
