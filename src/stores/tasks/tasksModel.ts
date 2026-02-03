@@ -51,7 +51,7 @@ export type TaskMsg =
   | { type: "ADD_ONE_REQUEST"; task: Partial<Task>}
   | { type: "ADD_ONE_SUCCESS"; task: Task }
   | { type: "UPDATE_ONE_REQUEST"; id: number}
-  | { type: "UPDATE_ONE_SUCCESS"; task: Task }
+  | { type: "UPDATE_ONE_SUCCESS"; task: Task; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "DELETE_ONE_REQUEST"; id: number}
   | { type: "DELETE_ONE_SUCCESS"; deleted: boolean }
   | { type: "FETCH_ALL_REQUEST";}

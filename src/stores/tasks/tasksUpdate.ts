@@ -18,7 +18,12 @@ export function update(model: TaskModel, msg: TaskMsg): TaskModel {
       return { ...model, isLoading: true, error: null };
 
     case "UPDATE_ONE_SUCCESS":
-      return { ...model, isLoading: false, task: msg.task };
+      return { 
+        ...model, 
+        isLoading: false, 
+        task: msg.task, 
+        tasks: model.tasks?.map(t => t.id === msg.task.id ? msg.task : t) || null
+      };
 
     case "DELETE_ONE_REQUEST":
       return { ...model, isLoading: true, error: null };

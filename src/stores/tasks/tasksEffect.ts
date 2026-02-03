@@ -1,4 +1,4 @@
-import type { TaskMsg } from "./tasksModel";
+import type { InvertState, TaskMsg } from "./tasksModel";
 import type { Task } from "@/interfaces/Task";
 
 export async function fetchAllTask(
@@ -100,9 +100,7 @@ export async function postTask(
     });
 
     if (!res.ok) throw new Error("Post failed");
-    
     const data = await res.json();
-
     dispatch({ type: "ADD_ONE_SUCCESS", task: data.data });
     
   } catch (e: any) {
@@ -118,19 +116,42 @@ export async function updateTask(
   dispatch({ type: "UPDATE_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`api/edit/${id}`, {
+    /*const res = await fetch(`api/edit/${id}`, {
       method: "PUT", 
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(changes), 
     });
-
     if (!res.ok) throw new Error("Update failed");
-    
     const data = await res.json();
+    dispatch({ type: "UPDATE_ONE_SUCCESS", task: data.data });*/
 
-    dispatch({ type: "UPDATE_ONE_SUCCESS", task: data.data });
+    const tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
+    const history = JSON.parse(localStorage.getItem('history') || '[]');
+
+    const index = tasks.findIndex((t: any) => t.id === id);
+    if (index === -1) throw new Error("Task not found");
+
+    const oldTask = tasks[index];
+
+    const updatedTask = { ...oldTask, ...changes };
+    tasks[index] = updatedTask;
+    
+    history.push({ inverse: "EDIT", state: oldTask });
+
+    const redo: InvertState[] = [];
+
+    localStorage.setItem('taskList', JSON.stringify(tasks));
+    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem('redo', JSON.stringify(redo));
+
+    dispatch({ 
+      type: "UPDATE_ONE_SUCCESS", 
+      task: updatedTask,
+      history, 
+      redo 
+    });
     
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });

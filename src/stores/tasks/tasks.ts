@@ -41,10 +41,19 @@ export const useTaskStore = defineStore('task', () => {
   const dispatch = (msg: TaskMsg) => {
     model.value = update(model.value, msg);
 
-    if (msg.type === "FETCH_ALL_SUCCESS") {
-      if (msg.history) historyStack.value = msg.history;
-      if (msg.redo) redoStack.value = msg.redo;
+    if (msg.type === "FETCH_ALL_SUCCESS" || msg.type === "UPDATE_ONE_SUCCESS") {
+      
+      if ('history' in msg && msg.history) {
+        historyStack.value = msg.history;
+    }
+
+      if ('redo' in msg && msg.redo) {
+        redoStack.value = msg.redo;
+    }
+
+      if (msg.type === "FETCH_ALL_SUCCESS") {
       initialized.value = true;
+    }
     }
 
   }
@@ -53,11 +62,9 @@ export const useTaskStore = defineStore('task', () => {
     await fetchAllTask(dispatch);
   }
 
-
   const getTask = async (id: number) => {
     await fetchTask(id, dispatch);
   }
-
 
   const addTask = async (newTask: Omit<Task, "id">) => {
 
@@ -95,27 +102,7 @@ export const useTaskStore = defineStore('task', () => {
 
   const editTask = async (id: number, newInfo: Partial<Task>) => {
 
-    // await updateTask(id,newInfo,dispatch); // ! ONLY WORKS ON REAL API NOT MOCK
-
-    const task = model.value.tasks?.find((t) => t.id === id);
-
-    if (task) {
-      const updatedTask = { ...task, ...newInfo };
-
-      let ind = model.value.tasks?.findIndex((t) => t.id === id);
-      if (ind !== undefined && ind !== -1 && model.value.tasks) {
-        model.value.tasks[ind] = updatedTask;
-      }
-
-      // TODO: ADD ERROR HANDLING
-      localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-
-      historyStack.value.push({ inverse: "EDIT", state: task });
-      // TODO: ADD ERROR HANDLING
-      localStorage.setItem('history', JSON.stringify(historyStack.value));
-      redoStack.value = [];
-      localStorage.setItem('redo', JSON.stringify(redoStack.value));
-    }
+  await updateTask(id, newInfo, dispatch);
   }
 
   const removeTask = async (id: number) => {
