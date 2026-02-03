@@ -53,7 +53,7 @@ export type TaskMsg =
   | { type: "UPDATE_ONE_REQUEST"; id: number}
   | { type: "UPDATE_ONE_SUCCESS"; task: Task; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "DELETE_ONE_REQUEST"; id: number}
-  | { type: "DELETE_ONE_SUCCESS"; deleted: boolean }
+  | { type: "DELETE_ONE_SUCCESS"; id: number; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "FETCH_ALL_REQUEST";}
   | { type: "FETCH_ALL_SUCCESS"; tasks: Task[]; history?: InvertState[]; redo?: InvertState[]; }
   | { type: "REQUEST_FAILURE"; error: string };

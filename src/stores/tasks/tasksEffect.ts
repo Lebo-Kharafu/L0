@@ -101,7 +101,7 @@ export async function postTask(
     if (!res.ok) throw new Error("Post failed");
     const data = await res.json();
     dispatch({ type: "ADD_ONE_SUCCESS", task: data.data });*/
-    
+
     const tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
     const history = JSON.parse(localStorage.getItem('history') || '[]');
 
@@ -194,13 +194,40 @@ export async function deleteTask(
   dispatch({ type: "DELETE_ONE_REQUEST", id });
 
   try {
-    const res = await fetch(`api/task/del/${id}`, {
+    /*const res = await fetch(`api/task/del/${id}`, {
       method: "DELETE", 
     });
-
     if (!res.ok) throw new Error("Delete failed");
-    
-    dispatch({ type: "DELETE_ONE_SUCCESS", deleted: true });
+    dispatch({ type: "DELETE_ONE_SUCCESS", deleted: true });*/
+
+    let tasks = JSON.parse(localStorage.getItem('taskList') || '[]');
+    const history = JSON.parse(localStorage.getItem('history') || '[]');
+
+    const taskToDelete = tasks.find((t: any) => t.id === id);
+
+    if (!taskToDelete) {
+        throw new Error("Task not found");
+    }
+
+    tasks = tasks.filter((t: any) => t.id !== id);
+
+    history.push({ 
+        inverse: "ADD", 
+        state: taskToDelete 
+    });
+
+    const redo: any[] = [];
+
+    localStorage.setItem('taskList', JSON.stringify(tasks));
+    localStorage.setItem('history', JSON.stringify(history));
+    localStorage.setItem('redo', JSON.stringify(redo));
+
+    dispatch({ 
+        type: "DELETE_ONE_SUCCESS", 
+        id: id, 
+        history, 
+        redo 
+    });
     
   } catch (e: any) {
     dispatch({ type: "REQUEST_FAILURE", error: e.message });

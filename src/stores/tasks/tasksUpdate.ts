@@ -33,7 +33,11 @@ export function update(model: TaskModel, msg: TaskMsg): TaskModel {
       return { ...model, isLoading: true, error: null };
 
     case "DELETE_ONE_SUCCESS":
-      return { ...model, isLoading: false, deleted: true };
+      return { 
+        ...model, 
+        isLoading: false, 
+        tasks: model.tasks?.filter(t => t.id !== msg.id) || null
+      };
 
     case "FETCH_ALL_REQUEST":
       return { ...model, isLoading: true, error: null };

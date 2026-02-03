@@ -73,24 +73,7 @@ export const useTaskStore = defineStore('task', () => {
   }
 
   const removeTask = async (id: number) => {
-
-    // await deleteTask(id,dispatch); // ! ONLY WORKS ON REAL API NOT MOCK
-
-    const task = model.value.tasks?.find((t) => t.id === id);
-    if (!task) { return };
-
-    model.value.tasks = model.value.tasks?.filter((x) => x.id !== id);
-
-    // TODO: ADD ERROR HANDLING
-    localStorage.setItem('taskList', JSON.stringify(model.value.tasks));
-
-    const { id: removedId, ...usableTask } = task;
-    historyStack.value.push({ inverse: "ADD", state: { ...task } });
-    // TODO: ADD ERROR HANDLING
-    localStorage.setItem('history', JSON.stringify(historyStack.value));
-
-    redoStack.value = [];
-    localStorage.setItem('redo', JSON.stringify(redoStack.value));
+    await deleteTask(id, dispatch);
   }
 
   const hardRefresh = async () => {
