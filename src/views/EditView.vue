@@ -143,7 +143,6 @@
     @media (max-width: 450px) {
         #edit-form {
             padding: 1rem;
-            width: 100%;
         }
 
         #edit-title {
