@@ -14,7 +14,6 @@ export async function fetchAllTask(
     const localRedo = localStorage.getItem('redo');
 
     if (localFlag && localData) {
-      //  console.log("Loading from LocalStorage");
 
       dispatch({
         type: "FETCH_ALL_SUCCESS",
@@ -24,10 +23,9 @@ export async function fetchAllTask(
       });
 
     } else {
-      // console.log("Fetching from API");
 
       const res = await fetch(`api/tasks`);
-      if (!res.ok) throw new Error("No Tasks found");
+      if (!res.ok) throw new Error("Something went wrong on our end. Please try again later :(");
       const data = await res.json();
 
       localStorage.setItem('taskList', JSON.stringify(data.data));
@@ -65,14 +63,14 @@ export async function fetchTask(
     const localData = localStorage.getItem('taskList');
 
     if (!localData) {
-      throw new Error("Task list is empty");
+      throw new Error("Trouble syncing online tasks, Please add Locally ;)");
     }
 
     const tasks = JSON.parse(localData);
     const foundTask = tasks.find((t: any) => t.id === id);
 
     if (!foundTask) {
-      throw new Error("Task not found");
+      throw new Error("Your Task couldn't be located");
     }
 
     dispatch({ type: "FETCH_ONE_SUCCESS", task: foundTask });
@@ -119,9 +117,24 @@ export async function postTask(
 
     const redo: InvertState[] = [];
 
-    localStorage.setItem('taskList', JSON.stringify(tasks));
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('redo', JSON.stringify(redo));
+    try {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('redo', JSON.stringify(redo));
+    }catch (e: any) {
+      let errorMsg = "An unexpected error occurred while saving.";
+
+      if (e.message.includes('quota')) {
+        errorMsg = "Storage is full! Please delete some tasks or history.";
+      } 
+      else if (e.name === 'SecurityError' || e.name === 'AccessDeniedError' ) {
+        errorMsg = "Storage was access denied. Please allow cookies/storage for this site. If you in incognito mode please use normal mode.";
+      } 
+      else if (e.message) {
+        errorMsg = e.message;
+      }
+      dispatch({ type: "REQUEST_FAILURE", error: errorMsg });
+    }
 
     dispatch({
       type: "ADD_ONE_SUCCESS",
@@ -158,7 +171,7 @@ export async function updateTask(
     const history = JSON.parse(localStorage.getItem('history') || '[]');
 
     const index = tasks.findIndex((t: any) => t.id === id);
-    if (index === -1) throw new Error("Task not found");
+    if (index === -1) throw new Error("Your Task couldn't be located");
 
     const oldTask = tasks[index];
 
@@ -169,9 +182,24 @@ export async function updateTask(
 
     const redo: InvertState[] = [];
 
-    localStorage.setItem('taskList', JSON.stringify(tasks));
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('redo', JSON.stringify(redo));
+    try {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('redo', JSON.stringify(redo));
+    }catch (e: any) {
+      let errorMsg = "An unexpected error occurred while saving.";
+
+      if (e.message.includes('quota')) {
+        errorMsg = "Storage is full! Please delete some tasks or history.";
+      } 
+      else if (e.name === 'SecurityError' || e.name === 'AccessDeniedError' ) {
+        errorMsg = "Storage was access denied. Please allow cookies/storage for this site. If you in incognito mode please use normal mode.";
+      } 
+      else if (e.message) {
+        errorMsg = e.message;
+      }
+      dispatch({ type: "REQUEST_FAILURE", error: errorMsg });
+    }
 
     dispatch({
       type: "UPDATE_ONE_SUCCESS",
@@ -204,7 +232,7 @@ export async function deleteTask(
     const taskToDelete = tasks.find((t: any) => t.id === id);
 
     if (!taskToDelete) {
-      throw new Error("Task not found");
+      throw new Error("Your Task couldn't be located");
     }
 
     tasks = tasks.filter((t: any) => t.id !== id);
@@ -216,9 +244,24 @@ export async function deleteTask(
 
     const redo: any[] = [];
 
-    localStorage.setItem('taskList', JSON.stringify(tasks));
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('redo', JSON.stringify(redo));
+    try {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('redo', JSON.stringify(redo));
+    }catch (e: any) {
+      let errorMsg = "An unexpected error occurred while saving.";
+
+      if (e.message.includes('quota')) {
+        errorMsg = "Storage is full! Please delete some tasks or history.";
+      } 
+      else if (e.name === 'SecurityError' || e.name === 'AccessDeniedError' ) {
+        errorMsg = "Storage was access denied. Please allow cookies/storage for this site. If you in incognito mode please use normal mode.";
+      } 
+      else if (e.message) {
+        errorMsg = e.message;
+      }
+      dispatch({ type: "REQUEST_FAILURE", error: errorMsg });
+    }
 
     dispatch({
       type: "DELETE_ONE_SUCCESS",
@@ -269,9 +312,24 @@ export async function undoLastAction(
         break;
     }
 
-    localStorage.setItem('taskList', JSON.stringify(tasks));
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('redo', JSON.stringify(redo));
+    try {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('redo', JSON.stringify(redo));
+    }catch (e: any) {
+      let errorMsg = "An unexpected error occurred while saving.";
+
+      if (e.message.includes('quota')) {
+        errorMsg = "Storage is full! Please delete some tasks or history.";
+      } 
+      else if (e.name === 'SecurityError' || e.name === 'AccessDeniedError' ) {
+        errorMsg = "Storage was access denied. Please allow cookies/storage for this site. If you in incognito mode please use normal mode.";
+      } 
+      else if (e.message) {
+        errorMsg = e.message;
+      }
+      dispatch({ type: "REQUEST_FAILURE", error: errorMsg });
+    }
 
     dispatch({
       type: "FETCH_ALL_SUCCESS",
@@ -323,9 +381,24 @@ export async function redoLastAction(
         break;
     }
 
-    localStorage.setItem('taskList', JSON.stringify(tasks));
-    localStorage.setItem('history', JSON.stringify(history));
-    localStorage.setItem('redo', JSON.stringify(redo));
+    try {
+      localStorage.setItem('taskList', JSON.stringify(tasks));
+      localStorage.setItem('history', JSON.stringify(history));
+      localStorage.setItem('redo', JSON.stringify(redo));
+    }catch (e: any) {
+      let errorMsg = "An unexpected error occurred while saving.";
+
+      if (e.message.includes('quota')) {
+        errorMsg = "Storage is full! Please delete some tasks or history.";
+      } 
+      else if (e.name === 'SecurityError' || e.name === 'AccessDeniedError' ) {
+        errorMsg = "Storage was access denied. Please allow cookies/storage for this site. If you in incognito mode please use normal mode.";
+      } 
+      else if (e.message) {
+        errorMsg = e.message;
+      }
+      dispatch({ type: "REQUEST_FAILURE", error: errorMsg });
+    }
 
     dispatch({
       type: "FETCH_ALL_SUCCESS",

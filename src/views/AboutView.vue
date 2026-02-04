@@ -13,22 +13,32 @@
         
         <div class="stack-item">
           <h3>Vue 3 Composition API</h3>
-          <p>Utilizes <code>script setup</code>, reactive refs, computed properties, and lifecycle hooks (onMounted) for a clean, TypeScript-friendly codebase.</p>
+          <p>Uses script setup, reactive refs, computed properties, lifecycle hooks (onMounted,watch), and TypeScript.</p>
         </div>
 
         <div class="stack-item">
           <h3>Pinia State Management</h3>
-          <p>Implements a centralized store using the Model-View-Update pattern. It handles complex logic including CRUD operations, an Undo/History stack, and state hydration.</p>
+          <p>Implements a centralized store using the Model-View-Update and ELM pattern. It handles CRUD operations, an Undo/Redo stack, and state hydration.</p>
         </div>
 
         <div class="stack-item">
           <h3>Data Persistence</h3>
-          <p>Features a custom synchronization layer that bridges reactive state with LocalStorage, ensuring data integrity across page reloads and sessions.</p>
+          <p>LocalStorage, ensuring data integrity across page reloads and sessions.</p>
         </div>
 
         <div class="stack-item">
           <h3>Vue Router</h3>
           <p>Manages Single Page Application navigation with dynamic route matching for editing tasks and programmatic navigation control.</p>
+        </div>
+
+        <div class="stack-item">
+          <h3>Datahub Macaca</h3>
+          <p>For Mocking initial api server call and backend mocking</p>
+        </div>
+
+        <div class="stack-item">
+          <h3>Vite Proxy</h3>
+          <p>Simple basic re-routing of the datahub api calls, to evade cors issues.</p>
         </div>
       </div>
       
@@ -41,7 +51,6 @@
 
 <style scoped>
 .about {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;

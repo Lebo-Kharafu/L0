@@ -37,7 +37,7 @@
   },
   "interfaceUniqId": "c489fb10-ed1c-4444-b813-3b9ad4ea0de3",
   "contextConfig": {
-    "responseDelay": 0,
+    "responseDelay": "1",
     "responseStatus": 200,
     "responseHeaders": {}
   },
